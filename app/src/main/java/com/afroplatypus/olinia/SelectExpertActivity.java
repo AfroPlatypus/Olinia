@@ -26,6 +26,7 @@ public class SelectExpertActivity extends AppCompatActivity {
     private FirebaseListAdapter<Expert> adapter;
     private FirebaseAuth mAuth;
     private DatabaseReference mFirebaseDatabaseReference;
+    private boolean clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class SelectExpertActivity extends AppCompatActivity {
             protected void populateView(View v, final Expert expert, int position) {
                 expert.setId(getRef(position).getKey());
                 ((TextView) v.findViewById(R.id.txt_name)).setText(expert.getName());
+                ((TextView) v.findViewById(R.id.txt_description)).setText(expert.getDescription());
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -64,9 +66,12 @@ public class SelectExpertActivity extends AppCompatActivity {
     public void expertClicked(final Expert expert) {
         Log.d("User ID", user_id);
         Log.d("Expert ID", expert.getId());
+        clicked = true;
         mFirebaseDatabaseReference.child("conversations").orderByChild("expert").equalTo(expert.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!clicked) return;
+                clicked = false;
                 boolean already = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("user").getValue().toString().equals(user_id)) {
