@@ -107,8 +107,9 @@ public class ChatSelectionActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.child("experts/" + conversation.getExpert() + "/name").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (((TextView) v.findViewById(R.id.user)).getText() == "")
+                        if (((TextView) v.findViewById(R.id.user)).getText() == "") {
                             ((TextView) v.findViewById(R.id.user)).setText(dataSnapshot.getValue(String.class));
+                        }
                     }
 
                     @Override
