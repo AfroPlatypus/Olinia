@@ -58,8 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
                     mFirebaseDatabaseReference.child("users/" + user.getUid() + "/connected").setValue(true);
                     startActivity(intentLoad);
                     RegisterActivity.this.finish();
-                } else {
-                    mFirebaseDatabaseReference.child("users/" + user.getUid() + "/connected").setValue(false);
                 }
             }
         };
