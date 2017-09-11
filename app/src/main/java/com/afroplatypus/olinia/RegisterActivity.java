@@ -67,16 +67,20 @@ public class RegisterActivity extends AppCompatActivity {
                 if (isValidEmail(txtMail.getText().toString().trim())) {
                     if (passwordsMatch()) {
                         if (fieldsNotEmpty()) {
-                            prog = ProgressDialog.show(RegisterActivity.this, "Espere por favor", "Iniciando sesión...", true);
-                            mAuth.createUserWithEmailAndPassword(txtMail.getText().toString().trim(), txtPass.getText().toString())
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            prog.hide();
-                                            if (!task.isSuccessful())
-                                                Toast.makeText(RegisterActivity.this, "Algo salió mal, intentalo más tarde", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+                            if (txtPass.getText().toString().length() >= 6) {
+                                prog = ProgressDialog.show(RegisterActivity.this, "Espere por favor", "Iniciando sesión...", true);
+                                mAuth.createUserWithEmailAndPassword(txtMail.getText().toString().trim(), txtPass.getText().toString())
+                                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                prog.hide();
+                                                if (!task.isSuccessful())
+                                                    Toast.makeText(RegisterActivity.this, "Algo salió mal, intentalo más tarde", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "La contraseña debe tener al menos 6 caracateres.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(RegisterActivity.this, "Falta de llenar algún campo.", Toast.LENGTH_SHORT).show();
                         }
