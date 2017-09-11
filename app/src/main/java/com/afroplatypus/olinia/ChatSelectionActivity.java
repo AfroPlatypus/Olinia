@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,8 +38,6 @@ public class ChatSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_selection);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid().trim();
         intentLogIn = new Intent(this, LogInActivity.class);
@@ -72,9 +68,6 @@ public class ChatSelectionActivity extends AppCompatActivity {
                 startActivity(intentExpSel);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Log.d("USER ID", user_id);
     }
 
     private void presenceSystem() {
@@ -121,6 +114,7 @@ public class ChatSelectionActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         chatIntent.putExtra("conversation_key", conversation.getKey());
+                        chatIntent.putExtra("expert_key", conversation.getExpert());
                         startActivity(chatIntent);
                     }
                 });

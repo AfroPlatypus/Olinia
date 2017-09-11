@@ -11,16 +11,20 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ChatActivity extends AppCompatActivity {
-
+    public static final String EXPERTS_CHILD = "experts";
     public static final String CONVERSATION_CHILD = "conversations";
     public static final String MESSAGES_CHILD = "messages";
     //TODO Change to user id
     String user_id;
     String conversation_key;
+    String expert_key;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mAuth;
     private FirebaseListAdapter<Message> mFirebaseAdapter;
@@ -33,6 +37,9 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
 
@@ -41,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
         txt = (TextView) findViewById(R.id.txt);
 
         conversation_key = getIntent().getExtras().getString("conversation_key");
+        expert_key = getIntent().getExtras().getString("expert_key");
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +84,18 @@ public class ChatActivity extends AppCompatActivity {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         getMessages();
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+
+        mFirebaseDatabaseReference.child("experts/" + expert_key + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setTitle(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getMessages() {
